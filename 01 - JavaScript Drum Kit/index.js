@@ -1,8 +1,7 @@
-function removeClass(x) {
-	const classToRemove = document.getElementsByClassName(x);
-	for (var i=0; i<classToRemove.length;i++) {
-		classToRemove[i].classList.remove(x);
-	}
+function removeTransition(e) {
+	if (e.propertyName !== "transform") return;
+	this.classList.remove("playing");
+	console.log(e.propertyName);
 }
 function showAndPlay(key) {
 	var el = document.querySelector(`[data-key = "${key}"]`);
@@ -11,17 +10,16 @@ function showAndPlay(key) {
 	var audioKey = document.querySelector(`audio[data-key = "${key}"]`);
 	audioKey.currentTime = 0;
 	audioKey.play();
-	setTimeout(removeClass,200,"playing");
 }
 window.addEventListener('keydown', function(e) {
 	var key = e.keyCode;
 	showAndPlay(key);
 });
-var drumKeys = document.getElementsByClassName('key');
+var drumKeys = document.querySelectorAll('.key');
 var keyPressed = function() {
 	var attr = this.getAttribute("data-key");
 	showAndPlay(attr);
 }
-for (var j=0;j<drumKeys.length;j++) {
-	drumKeys[j].addEventListener('click',keyPressed,false);
-}
+
+drumKeys.forEach(key => key.addEventListener('click',keyPressed));
+drumKeys.forEach(key => key.addEventListener('transitionend',removeTransition));
